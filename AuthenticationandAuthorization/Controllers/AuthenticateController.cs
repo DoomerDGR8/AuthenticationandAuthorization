@@ -62,7 +62,7 @@ namespace AuthenticationandAuthorization.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        private async Task<LoginModel> AuthenticateUser(LoginModel login)
+        private static async Task<LoginModel> AuthenticateUser(LoginModel login)
         {
             LoginModel user = null;
 
@@ -72,7 +72,8 @@ namespace AuthenticationandAuthorization.Controllers
             {
                 user = new LoginModel { UserName = "Jay", Password = "123456" };
             }
-            return user;
+
+            return await Task.FromResult(user).ConfigureAwait(false);
         }
         #endregion
 
