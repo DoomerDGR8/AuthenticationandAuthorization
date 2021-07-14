@@ -19,9 +19,7 @@ namespace AuthenticationandAuthorization.Controllers
         /// <summary>
         /// Property Declaration
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
 
         #endregion
 
@@ -29,10 +27,7 @@ namespace AuthenticationandAuthorization.Controllers
         /// <summary>
         /// Constructor Injection to access all methods or simply DI(Dependency Injection)
         /// </summary>
-        public AuthenticateController(IConfiguration config)
-        {
-            _config = config;
-        }
+        public AuthenticateController(IConfiguration config) => _config = config;
         #endregion
 
         #region GenerateJWT
@@ -40,7 +35,6 @@ namespace AuthenticationandAuthorization.Controllers
         /// Generate Json Web Token Method
         /// </summary>
         /// <param name="userInfo"></param>
-        /// <returns></returns>
         private string GenerateJSONWebToken(LoginModel userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -61,7 +55,6 @@ namespace AuthenticationandAuthorization.Controllers
         /// Hardcoded the User authentication
         /// </summary>
         /// <param name="login"></param>
-        /// <returns></returns>
         private static async Task<LoginModel> AuthenticateUser(LoginModel login)
         {
             LoginModel user = null;
@@ -82,18 +75,19 @@ namespace AuthenticationandAuthorization.Controllers
         /// Login Authenticaton using JWT Token Authentication
         /// </summary>
         /// <param name="data"></param>
-        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost(nameof(Login))]
         public async Task<IActionResult> Login([FromBody] LoginModel data)
         {
             IActionResult response = Unauthorized();
-            var user = await AuthenticateUser(data);
+            var user = await AuthenticateUser(data).ConfigureAwait(false);
+
             if (data != null)
             {
                 var tokenString = GenerateJSONWebToken(user);
                 response = Ok(new { Token = tokenString, Message = "Success" });
             }
+
             return response;
         }
         #endregion
@@ -102,15 +96,13 @@ namespace AuthenticationandAuthorization.Controllers
         /// <summary>
         /// Authorize the Method
         /// </summary>
-        /// <returns></returns>
         [HttpGet(nameof(Get))]
         public async Task<IEnumerable<string>> Get()
         {
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var accessToken = await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false);
 
             return new string[] { accessToken };
         }
-
 
         #endregion
 
