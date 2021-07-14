@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AuthenticationandAuthorization.Controllers
 {
@@ -67,8 +66,8 @@ namespace AuthenticationandAuthorization.Controllers
         {
             LoginModel user = null;
 
-            //Validate the User Credentials    
-            //Demo Purpose, I have Passed HardCoded User Information    
+            //Validate the User Credentials
+            //Demo Purpose, I have Passed HardCoded User Information
             if (login.UserName == "Jay")
             {
                 user = new LoginModel { UserName = "Jay", Password = "123456" };
@@ -92,7 +91,7 @@ namespace AuthenticationandAuthorization.Controllers
             if (data != null)
             {
                 var tokenString = GenerateJSONWebToken(user);
-                response = Ok(new { Token = tokenString , Message = "Success" });
+                response = Ok(new { Token = tokenString, Message = "Success" });
             }
             return response;
         }
